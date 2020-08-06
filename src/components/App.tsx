@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../index.scss';
 
+const RESULT_ERROR = 'Error';
+
 interface ResultProps {
   result: string | null;
 }
@@ -105,42 +107,98 @@ interface ResultInit {
   action: null | string;
 }
 
+function resultString(digit:string, result:ResultInit):[string, string, string] {
+  let a = (result.a === null)? '': result.a;
+  let b = (result.b === null)? '': result.b;
+  let act = (result.action === null)? '': result.action;
+  let res = '';
+  if(!act){
+    console.log(a);
+    a = Number(`${a}${digit}`).toString().split('').slice(0,15).join('');
+  }
+  else{
+    b = Number(`${b}${digit}`).toString().split('').slice(0,15).join('');;
+  }
+  res= `${a} ${act} ${b}`;
+  return [a, b, res]
+}
+
+
 const Calculator: React.FC = () => {
   const [result, setResult] = useState<ResultInit>(resultInit);
-  // const [nums, setNums] = useState<Array<number>>([0,0]);
 
-  const handleDigit = (num: string | undefined) => {
-    if(num){
-      const res = (result.res === null) ? '' : result.res;
+  const handleDigit = (digit: string | undefined) => {
+    if(digit){
+      let [a,b,res] = resultString(digit, result);
       if(!result.action) {
-        const a = (result.a === null) ? '' : result.a;
-        setResult({...result, a: `${a}${num}`, res: `${res}${num}`});
+        setResult({...result, a: a, res: res});
       }
       else{
-        const b = (result.b === null) ? '' : result.b;
-        setResult({...result, b: `${b}${num}`, res: `${res}${num}`});
+        setResult({...result, b: b, res: res});
       }
     }
   };
 
   const handleEqual = () => {
-    // setResult('nothing');
+    if(result.a && result.b && result.action){
+      const res = calculate(result.a, result.b, result.action);
+      setResult({action: null, b: null, a: null, res: res});
+    }
   };
+
+  const calculate = (a: string | null,b: string | null, act: string | null) => {
+
+    if(a && b && act){
+      let res = '';
+      console.log(a,b,act);
+      switch (act) {
+        case "+":
+          res = (Number(a) + Number(b)).toString();
+          break;
+        case "-":
+          res = (Number(a) - Number(b)).toString();
+          break;
+        case "*":
+          res = (Number(a) * Number(b)).toString();
+          break;
+        case ":":
+          let calc = (Number(a) / Number(b)).toString();
+          res = (calc === 'Infinity' || calc === '-Infinity')? RESULT_ERROR : calc;
+          break;
+       
+      } 
+      return res;
+    }
+    return '';
+  }
 
   const handleClear = () => {
     setResult(resultInit);
   };
   const handleAction = (act:string) => {
-    const res = (result.res === null)? '' : result.res;
-    if(result.a && !result.action){
-       setResult({...result, action: act, res: `${res} ${act} `});
+    let res:string = (result.res === null)? '' : result.res;
+    let a = result.a;
+    if(a){
+      if(!result.b){
+        // debugger;
+        res = (result.action)? 
+          `${res.split('').slice(0,-3).join('')} ${act} `:
+          `${a} ${act} `;
+      }
+      else{
+        let calc = calculate(result.a, result.b, result.action);
+        console.log(calc);
+        if(calc !== RESULT_ERROR){
+          a = calc;
+          res = `${a} ${act} `;
+        }
+        else {
+         setResult({a: null, res: RESULT_ERROR, b: null, action: null});
+         return
+        }
+      }
+      setResult({a: a, res: res, b: null, action: act});
     }
-    //------------------------  fix this problem   
-    else {
-      
-      setResult({...result, action: act, res: `${res.slice(0,-2)} ${act} `});
-    }
-    //--------------------------------------------
   }
 
   return (

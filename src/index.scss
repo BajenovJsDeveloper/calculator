@@ -20,6 +20,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  .box{
+  	/* select is none*/
+  	-webkit-user-select: none;
+    /* user-select -- это нестандартное свойство */
+    -moz-user-select: none;
+    /* поэтому нужны префиксы */
+    -ms-user-select: none;
+  }
 
   .container {
     margin: 20px;

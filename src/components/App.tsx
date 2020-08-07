@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
 import '../index.scss';
 
-const RESULT_ERROR = 'Error';
+const RESULT_ERROR: string = 'Error';
+const NUMBERS: string = '0123456789';
+const BACKSPACE: number = 8;
+const DELETE: number = 46;
+const ESCAPE: number = 27;
 
 interface ResultProps {
   result: string | null;
@@ -9,6 +14,7 @@ interface ResultProps {
 
 interface EqualProps {
   handleEqual: () => void;
+  tabId: number;
 }
 
 interface DigitsProps {
@@ -18,10 +24,12 @@ interface DigitsProps {
 const EqualButton: React.FC<EqualProps> = (
     props: EqualProps
   ): React.ReactElement => {
-  const { handleEqual } = props;
+  const { handleEqual, tabId } = props;
   
   return (
-    <div className="box equal" onClick={handleEqual}>
+    <div className="box equal" 
+      tabIndex={tabId}
+      onClick={handleEqual}>
       =
     </div>
   );
@@ -32,24 +40,29 @@ const DisplayResult: React.FC<ResultProps> = (
   ): React.ReactElement => {
   let { result } = props;
   result = result === null? '0': result; 
-  return <div className="box result">{result}</div>;
+
+  return (
+      <div className="box result">{result}</div>
+    );
 };
 
 const Digits: React.FC<DigitsProps> = (props: DigitsProps) => {
   const { handleDigit } = props;
-  const digits = [0, 7, 8, 9, 4, 5, 6, 1, 2, 3];
+  const digits:Array<number> = [0, 7, 8, 9, 4, 5, 6, 1, 2, 3];
   const numberClick = (ev: React.SyntheticEvent<HTMLDivElement>) => {
     const tr = ev.target as HTMLElement;
     handleDigit(tr.dataset.id);
   };
+
   return (
     <>
-      {digits.map((item, idx) => (
+      {digits.map((item:number, idx:number) => (
         <div
           key={`${item}a`}
           onClick={(ev) => numberClick(ev)}
           className="box"
           data-id={item}
+          tabIndex={idx+1}
         >
           {item}
         </div>
@@ -58,25 +71,32 @@ const Digits: React.FC<DigitsProps> = (props: DigitsProps) => {
   );
 };
 
+
 interface ClearProps {
   handleClear: () => void;
+  tabId: number;
 }
 
 const ClearButton:React.FC<ClearProps> = (props:ClearProps) => {
-  const { handleClear } = props;
+  const { handleClear, tabId } = props;
   return (
-      <div className='box action clear' onClick={handleClear}>clear</div>
+      <div className='box action clear' 
+        tabIndex={tabId}
+        onClick={handleClear}>
+        clear
+      </div>
     );
 }
 
 interface ActionsProps{
   handleAction: (act:string) => void;
+  tabId: number;
 }
 
-const Actions:React.FC<ActionsProps> = (props:ActionsProps) => {
+const Actions: React.FC<ActionsProps> = (props:ActionsProps) => {
 
-  const { handleAction } = props;
-  const act:Array<string> = ['+','-','*',':'];
+  const { handleAction, tabId } = props;
+  const act: Array<string> = ['+','-','*',':'];
 
   const actClick = (e:React.SyntheticEvent<HTMLDivElement>) => {
     const item = e.target as HTMLElement;
@@ -85,16 +105,17 @@ const Actions:React.FC<ActionsProps> = (props:ActionsProps) => {
   return (
       <div className="actions">
         {
-          act.map(act => (<div key={act} 
+          act.map((act: string, idx: number) => (<div key={act} 
             className="box action" 
             onClick={actClick}
+            tabIndex={idx + tabId}
             data-act={act}>{act}</div>))
         }
       </div>
     );
 }
 
-const resultInit:ResultInit  = {
+const resultInit: ResultInit  = {
   res: null,
   a: null,
   b:null,
@@ -107,29 +128,34 @@ interface ResultInit {
   action: null | string;
 }
 
-function resultString(digit:string, result:ResultInit):[string, string, string] {
-  let a = (result.a === null)? '': result.a;
-  let b = (result.b === null)? '': result.b;
+function resultToString(digit: string, result: ResultInit):[string, string, string] {
+  let a: string = (result.a === null)? '': result.a;
+  let b: string = (result.b === null)? '': result.b;
   let act = (result.action === null)? '': result.action;
   let res = '';
   if(!act){
     console.log(a);
-    a = Number(`${a}${digit}`).toString().split('').slice(0,15).join('');
+    a = ((a+digit).length < 16)? Number(`${a}${digit}`).toString().split('').slice(0,15).join('') : a;
   }
   else{
-    b = Number(`${b}${digit}`).toString().split('').slice(0,15).join('');;
+    b = ((b+digit).length < 16)? Number(`${b}${digit}`).toString().split('').slice(0,15).join('') : b;
   }
   res= `${a} ${act} ${b}`;
   return [a, b, res]
 }
 
+interface Rref extends HTMLDivElement{
+ readonly current: HTMLDivElement | null;
+}
 
 const Calculator: React.FC = () => {
   const [result, setResult] = useState<ResultInit>(resultInit);
+  const Ref:React.RefObject<Rref> = React.createRef(); 
+
 
   const handleDigit = (digit: string | undefined) => {
     if(digit){
-      let [a,b,res] = resultString(digit, result);
+      let [a,b,res] = resultToString(digit, result);
       if(!result.action) {
         setResult({...result, a: a, res: res});
       }
@@ -189,6 +215,11 @@ const Calculator: React.FC = () => {
         let calc = calculate(result.a, result.b, result.action);
         console.log(calc);
         if(calc !== RESULT_ERROR){
+          if(Number(calc) > Number.MAX_SAFE_INTEGER || Number(calc) < Number.MIN_SAFE_INTEGER){
+            calc = Number(calc).toExponential();
+            setResult({a: null, res: calc, b: null, action: null});
+            return 
+          }
           a = calc;
           res = `${a} ${act} `;
         }
@@ -201,18 +232,58 @@ const Calculator: React.FC = () => {
     }
   }
 
+  const keyPress = (keyboard:React.KeyboardEvent<HTMLDivElement>) =>  {
+    console.log(keyboard.keyCode, keyboard.key);
+    const keyAction = keyboard.key;
+    const keyNumber =  keyboard.key;
+    const keyCode = keyboard.keyCode;
+    
+    switch(keyAction){
+      case '+':
+        handleAction(keyAction)
+        //
+        break;
+      case '-':
+        handleAction(keyAction)
+        //
+        break;
+      case '*':
+        handleAction(keyAction)
+        //
+        break;
+      case '/':
+        handleAction(keyAction)
+        //
+        break;
+      case 'Enter':
+        handleEqual();
+        // 
+    }
+    if(NUMBERS.includes(keyNumber)) {
+      handleDigit(keyNumber);
+    }
+    if(keyCode == BACKSPACE || keyCode == DELETE || keyCode == ESCAPE){
+      handleClear();
+    }
+  }
+
+  useEffect(()=>{
+    if(Ref.current) Ref.current.focus();
+  },[Ref]);
+
+
   return (
     <>
-      <div className="container">
+      <div className="container" onKeyDown={keyPress} tabIndex={-1} ref={Ref}>
         <DisplayResult result={result.res} />
         <div className="digits">
           <div className="d-grid">
-            <ClearButton handleClear={handleClear}/>
-            <EqualButton handleEqual={handleEqual} />
+            <ClearButton handleClear={handleClear} tabId={0}/>
+            <EqualButton handleEqual={handleEqual} tabId={15}/>
             <Digits handleDigit={handleDigit} />
           </div>
         </div>
-        <Actions handleAction={handleAction}/>
+        <Actions handleAction={handleAction} tabId={11}/>
       </div>
     </>
   );

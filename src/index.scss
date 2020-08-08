@@ -12,6 +12,7 @@ body {
     margin: 0;
     padding: 0;
   }
+
 }
 // ------------  main container  ----
 #root {
@@ -20,9 +21,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  .box{
-  	/* select is none*/
-  	-webkit-user-select: none;
+  flex-direction: column;
+  h1{
+  	color:gray;
+  	font-size: 50px;
+  }
+  .box {
+    /* select is none*/
+    -webkit-user-select: none;
     /* user-select -- это нестандартное свойство */
     -moz-user-select: none;
     /* поэтому нужны префиксы */
@@ -43,6 +49,7 @@ body {
     grid-gap: 1px;
     font-weight: bold;
     box-shadow: 0 0 10px 3px grey;
+    outline-style: none;
     .result {
       display: flex;
       align-items: center;
@@ -77,8 +84,15 @@ body {
         background-color: white;
         font-size: 35px;
         cursor: pointer;
+        transition: 0.3s;
         &:hover {
-          opacity: 0.6;
+          opacity: 0.9;
+        }
+        &:active{
+        	transform: scale(0.95);
+        	background-color: rgba(0, 96, 128, 1);
+        	color:white;
+        	opacity: 1;
         }
       }
     }
@@ -94,15 +108,22 @@ body {
         background-color: #f2274f;
         color: white;
         font-size: 50px;
+        transition: 0.3s;
       }
       .box {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 35px;
+        font-size: 45px;
         cursor: pointer;
         &:hover {
           opacity: 0.6;
+        }
+        &:active{
+        	transform: scale(0.95);
+        	background-color: rgba(128, 0, 0, 1);
+        	color:white;
+        	opacity: 1;
         }
       }
     }

@@ -8,7 +8,7 @@ export interface ResultInit {
   res: null | string;
   a: null | string;
   b: null | string;
-  action: null | string;
+  action: null | string | undefined;
 }
 
 export default initialState;

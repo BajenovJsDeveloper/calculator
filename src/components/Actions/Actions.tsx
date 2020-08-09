@@ -18,6 +18,13 @@ const Actions: React.FC<ActionsProps> = (props: ActionsProps) => {
     const item = e.target as HTMLElement;
     if (!!item.dataset.act) handleAction(item.dataset.act);
   };
+
+  const keyClick = (ev:React.KeyboardEvent<HTMLDivElement>) => {
+    const item = ev.target as HTMLElement;
+    if(ev.keyCode === 32){
+      item.click();
+    }
+  }
   return (
     <div className="actions">
       {actItem.map((actItem: string, idx: number) => (
@@ -25,6 +32,7 @@ const Actions: React.FC<ActionsProps> = (props: ActionsProps) => {
           key={actItem}
           className="box action"
           onClick={actClick}
+          onKeyDown={keyClick}
           tabIndex={idx + tabId}
           data-act={actItem}
         >

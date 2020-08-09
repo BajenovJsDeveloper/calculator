@@ -42,7 +42,6 @@ const Calculator: React.FC = () => {
   };
 
   const keyPress = (keyboard: React.KeyboardEvent<HTMLDivElement>) => {
-    // console.log(keyboard.keyCode, keyboard.key);
     const keyAction: string = keyboard.key;
     const keyNumber: string = keyboard.key;
     const { keyCode } = keyboard;
@@ -78,14 +77,13 @@ const Calculator: React.FC = () => {
 
   useEffect(() => {
     if (Ref.current) Ref.current.focus();
-    // console.log('rerender...');
   }, [Ref]);
 
   return (
     <>
       <h1>Calculator</h1>
       <div
-        role='grid'
+        role="grid"
         className="container"
         onKeyDown={keyPress}
         tabIndex={INIT_FOCUS}

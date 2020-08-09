@@ -29,7 +29,7 @@ const Actions: React.FC<ActionsProps> = (props: ActionsProps) => {
     <div className="actions">
       {actItem.map((item: string, idx: number) => (
         <div
-          role='button'
+          role="button"
           key={item}
           className="box action"
           onClick={actClick}

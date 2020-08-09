@@ -19,7 +19,7 @@ const EqualButton: React.FC<EqualProps> = (
 
   return (
     <div
-      role='button'
+      role="button"
       className="box equal"
       tabIndex={tabId}
       onKeyDown={keyClick}

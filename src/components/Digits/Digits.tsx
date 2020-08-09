@@ -23,7 +23,7 @@ const Digits: React.FC<DigitsProps> = (props: DigitsProps) => {
     <>
       {digits.map((item: number, idx: number) => (
         <div
-          role='button'
+          role="button"
           key={`${item}a`}
           onClick={(ev) => numberClick(ev)}
           className="box"

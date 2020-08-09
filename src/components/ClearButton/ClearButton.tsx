@@ -17,7 +17,7 @@ const ClearButton: React.FC<ClearProps> = (props: ClearProps) => {
 
   return (
     <div
-      role='button'
+      role="button"
       className="box action clear"
       tabIndex={tabId}
       onKeyDown={keyClick}

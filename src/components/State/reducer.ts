@@ -24,7 +24,7 @@ function calculate(
       case '*':
         result = (Number(a) * Number(b)).toString();
         break;
-      case ':':{
+      case ':': {
         const calc: string = (Number(a) / Number(b)).toString();
         result = isNaN(Number(calc)) ? '0' : calc;
         result =
@@ -68,7 +68,7 @@ function checkOutofRange(act: string | undefined, calc: string): ResultInit {
   ) {
     newCalcResult = Number(newCalcResult).toExponential();
     return { res: newCalcResult, a: null, b: null, action: null };
-  } 
+  }
   const a = newCalcResult;
   const result = `${a} ${act} `;
   return { res: result, a, b: null, action: act };
@@ -78,20 +78,20 @@ function reducer(state: ResultInit, action: ActionObject) {
   let newState: ResultInit = { ...state };
   switch (action.type) {
     //-------------------------------------------------------
-    case 'DIGIT_CLICK':{
+    case 'DIGIT_CLICK': {
       const digit = action.data;
       if (digit) {
         const [a, b, result] = resultToString(digit, state);
         const currentAction = state.action;
-        newState = 
-            (currentAction === null)
-              ? { res: result, a, b: state.b, action: state.action }
-              : { res: result, a: state.a, b, action: state.action };
+        newState =
+          currentAction === null
+            ? { res: result, a, b: state.b, action: state.action }
+            : { res: result, a: state.a, b, action: state.action };
       }
       break;
     }
     //-------------------------------------------------------
-    case 'EQUAL_CLICK':{
+    case 'EQUAL_CLICK': {
       if (state.a && state.b && state.action) {
         const res = calculate(state.a, state.b, state.action);
         newState = { res, a: null, b: null, action: null };
@@ -99,7 +99,7 @@ function reducer(state: ResultInit, action: ActionObject) {
       break;
     }
     //-------------------------------------------------------
-    case 'ACTION_CLICK':{
+    case 'ACTION_CLICK': {
       let res: string = state.res === null ? '' : state.res;
       const { a } = state;
       const { b } = state;
@@ -113,16 +113,16 @@ function reducer(state: ResultInit, action: ActionObject) {
         } else {
           const calc = calculate(state.a, b, state.action);
           newState =
-              calc === RESULT_ERROR
-                ? { res: RESULT_ERROR, a: null, b: null, action: null }
-                : { ...checkOutofRange(act, calc) };
+            calc === RESULT_ERROR
+              ? { res: RESULT_ERROR, a: null, b: null, action: null }
+              : { ...checkOutofRange(act, calc) };
         }
         // console.log('action:',act);
       }
       break;
     }
     //-------------------------------------------------------
-    case 'CLEAR_CLICK':{
+    case 'CLEAR_CLICK': {
       newState = { res: null, a: null, b: null, action: null };
     }
   }

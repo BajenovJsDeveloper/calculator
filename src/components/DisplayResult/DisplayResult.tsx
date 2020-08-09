@@ -9,8 +9,12 @@ const DisplayResult: React.FC<ResultProps> = (
 ): React.ReactElement => {
   let { result } = props;
   result = result === null ? '0' : result;
+  const newResult: Array<string> = result.split('');
+  const id: number = newResult.indexOf('*');
 
-  return <div className="box result">{result}</div>;
+  if (id !== -1) newResult[id] = String.fromCharCode(215);
+
+  return <div className="box result">{newResult}</div>;
 };
 
 export default DisplayResult;

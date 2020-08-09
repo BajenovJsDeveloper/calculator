@@ -4,7 +4,7 @@ import Digits from './Digits/Digits';
 import ClearButton from './ClearButton/ClearButton';
 import EqualButton from './EqualButton/EqualButton';
 import DisplayResult from './DisplayResult/DisplayResult';
-import initialState  from './State/initialState';
+import initialState from './State/initialState';
 import { reducer } from './State/reducer';
 import '../index.scss';
 
@@ -17,7 +17,6 @@ const FIRST_FOCUS: number = 1;
 const SECOND_FOCUS: number = 2;
 const LAST_FOCUS: number = 12;
 
-
 interface Rref extends HTMLDivElement {
   readonly current: HTMLDivElement | null;
 }
@@ -27,26 +26,26 @@ const Calculator: React.FC = () => {
   const Ref: React.RefObject<Rref> = React.createRef();
 
   const handleDigit = (digit: string | undefined) => {
-    dispatch({type:'DIGIT_CLICK', data: digit});
+    dispatch({ type: 'DIGIT_CLICK', data: digit });
   };
 
   const handleEqual = () => {
-    dispatch({type: 'EQUAL_CLICK'});
+    dispatch({ type: 'EQUAL_CLICK' });
   };
 
   const handleClear = () => {
-    dispatch({type: 'CLEAR_CLICK'})
+    dispatch({ type: 'CLEAR_CLICK' });
   };
 
   const handleAction = (act: string) => {
-    dispatch({type: 'ACTION_CLICK', data: act})
+    dispatch({ type: 'ACTION_CLICK', data: act });
   };
 
   const keyPress = (keyboard: React.KeyboardEvent<HTMLDivElement>) => {
     // console.log(keyboard.keyCode, keyboard.key);
     const keyAction: string = keyboard.key;
     const keyNumber: string = keyboard.key;
-    const keyCode: number = keyboard.keyCode;
+    const { keyCode } = keyboard;
 
     switch (keyAction) {
       case '+':
@@ -79,13 +78,19 @@ const Calculator: React.FC = () => {
 
   useEffect(() => {
     if (Ref.current) Ref.current.focus();
-    console.log('rerender...')
+    // console.log('rerender...');
   }, [Ref]);
 
   return (
     <>
       <h1>Calculator</h1>
-      <div className="container" onKeyDown={keyPress} tabIndex={INIT_FOCUS} ref={Ref}>
+      <div
+        role='grid'
+        className="container"
+        onKeyDown={keyPress}
+        tabIndex={INIT_FOCUS}
+        ref={Ref}
+      >
         <DisplayResult result={state.res} />
         <div className="digits">
           <div className="d-grid">

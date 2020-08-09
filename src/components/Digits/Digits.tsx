@@ -1,5 +1,4 @@
-import React from 'react'
-
+import React from 'react';
 
 interface DigitsProps {
   handleDigit: (num: string | undefined) => void;
@@ -13,23 +12,24 @@ const Digits: React.FC<DigitsProps> = (props: DigitsProps) => {
     handleDigit(tr.dataset.id);
   };
 
-  const keyClick = (ev:React.KeyboardEvent<HTMLDivElement>) => {
+  const keyClick = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     const item = ev.target as HTMLElement;
-    if(ev.keyCode === 32){
+    if (ev.keyCode === 32) {
       item.click();
     }
-  }
+  };
 
   return (
     <>
       {digits.map((item: number, idx: number) => (
         <div
+          role='button'
           key={`${item}a`}
           onClick={(ev) => numberClick(ev)}
           className="box"
           data-id={item}
           onKeyDown={keyClick}
-          tabIndex={item+2}
+          tabIndex={item + 2}
         >
           {item}
         </div>

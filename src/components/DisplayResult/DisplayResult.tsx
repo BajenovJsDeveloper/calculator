@@ -14,11 +14,3 @@ const DisplayResult: React.FC<ResultProps> = (
 };
 
 export default DisplayResult;
-
-
- // const newResult = result.split('');
- //  if(result.includes('*')){
-	// const multiply:string = <React.Fragment>&times;</React.Fragment>;
-	// const id = result.indexOf('*');
-	// let newstr = result.split('').splice(id,1,multiply)
- //  } 

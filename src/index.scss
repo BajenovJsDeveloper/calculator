@@ -12,7 +12,6 @@ body {
     margin: 0;
     padding: 0;
   }
-
 }
 
 $colorClearBtn: rgba(122, 0, 0, 1);
@@ -35,9 +34,9 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  h1{
-  	color:gray;
-  	font-size: 50px;
+  h1 {
+    color: gray;
+    font-size: 50px;
   }
   .box {
     /* select is none*/
@@ -89,8 +88,8 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(4, 1fr);
         grid-gap: 1px;
-        .clear{
-        	color:$colorClearBtn;
+        .clear {
+          color: $colorClearBtn;
         }
       }
       .box {
@@ -104,11 +103,11 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
         &:hover {
           opacity: 0.9;
         }
-        &:active{
-        	transform: scale(0.95);
-        	background-color: $boxActiveColor;
-        	color: $resultTextColor;
-        	opacity: 1;
+        &:active {
+          transform: scale(0.95);
+          background-color: $boxActiveColor;
+          color: $resultTextColor;
+          opacity: 1;
         }
       }
     }
@@ -135,11 +134,11 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
         &:hover {
           opacity: 0.6;
         }
-        &:active{
-        	transform: scale(0.95);
-        	background-color: $actionsActiveColor;
-        	color: $resultTextColor;
-        	opacity: 1;
+        &:active {
+          transform: scale(0.95);
+          background-color: $actionsActiveColor;
+          color: $resultTextColor;
+          opacity: 1;
         }
       }
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Calculator from './components/App';
+import Calculator from './components/Calculator';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

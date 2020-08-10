@@ -6,7 +6,7 @@ export interface ActionObject {
   type: string;
   data?: string | undefined;
 }
-
+//-----------------------------------------------------------
 function calculate(
   a: string | null,
   b: string | null,
@@ -35,6 +35,7 @@ function calculate(
   }
   return '';
 }
+//-----------------------------------------------------------
 
 function resultToString(
   digit: string,
@@ -45,7 +46,6 @@ function resultToString(
   const act = state.action === null ? '' : state.action;
   let result = '';
   if (act === '') {
-    // console.log(a);
     a =
       (a + digit).length < 16
         ? Number(`${a}${digit}`).toString().split('').slice(0, 15).join('')
@@ -59,8 +59,12 @@ function resultToString(
   result = `${a} ${act} ${b}`;
   return [a, b, result];
 }
+//-----------------------------------------------------------
 
-function checkOutofRange(act: string | undefined, calc: string): ResultInit {
+function checkOutofRange(
+  act: string | undefined | null,
+  calc: string
+): ResultInit {
   let newCalcResult = calc;
   if (
     Number(newCalcResult) > Number.MAX_SAFE_INTEGER ||
@@ -70,9 +74,10 @@ function checkOutofRange(act: string | undefined, calc: string): ResultInit {
     return { res: newCalcResult, a: null, b: null, action: null };
   }
   const a = newCalcResult;
-  const result = `${a} ${act} `;
+  const result = act === null ? a : `${a} ${act} `;
   return { res: result, a, b: null, action: act };
 }
+
 //-----------------------------------------------------------
 function reducer(state: ResultInit, action: ActionObject) {
   let newState: ResultInit = { ...state };
@@ -93,8 +98,12 @@ function reducer(state: ResultInit, action: ActionObject) {
     //-------------------------------------------------------
     case 'EQUAL_CLICK': {
       if (state.a && state.b && state.action) {
-        const res = calculate(state.a, state.b, state.action);
-        newState = { res, a: null, b: null, action: null };
+        const calc = calculate(state.a, state.b, state.action);
+        newState =
+          calc === RESULT_ERROR
+            ? { res: RESULT_ERROR, a: null, b: null, action: null }
+            : { ...checkOutofRange(null, calc) };
+        // newState = { res: calc, a: null, b: null, action: null };
       }
       break;
     }
@@ -117,7 +126,6 @@ function reducer(state: ResultInit, action: ActionObject) {
               ? { res: RESULT_ERROR, a: null, b: null, action: null }
               : { ...checkOutofRange(act, calc) };
         }
-        // console.log('action:',act);
       }
       break;
     }

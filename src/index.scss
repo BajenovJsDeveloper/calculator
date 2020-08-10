@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
+
 body {
   margin: 0;
   padding: 0;
@@ -12,6 +14,7 @@ body {
     margin: 0;
     padding: 0;
   }
+	font-family: 'Play', sans-serif;
 }
 
 $colorClearBtn: rgba(122, 0, 0, 1);
@@ -49,19 +52,24 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
 
   .container {
     margin: 20px;
-    width: 700px;
+    // width: 700px;
     border: 1px solid;
     display: grid;
-    min-width: 300px;
+    // min-width: 300px;
     min-height: 400px;
     font-size: 25px;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, minmax(70px, 180px));
     background-color: $containerColor;
     grid-gap: 1px;
     font-weight: bold;
     box-shadow: 0 0 10px 3px $containerShadowColor;
     outline-style: none;
+    @media screen and (max-width: 400px) {
+      .result {
+        font-size: 25px !important;
+      }
+    }
     .result {
       display: flex;
       align-items: center;
@@ -88,6 +96,11 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(4, 1fr);
         grid-gap: 1px;
+        @media screen and (max-width: 400px){
+        	.clear {
+         font-size: 20px;
+        }
+        }
         .clear {
           color: $colorClearBtn;
         }

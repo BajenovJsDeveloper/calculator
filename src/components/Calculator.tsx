@@ -4,8 +4,8 @@ import Digits from './Digits/Digits';
 import ClearButton from './ClearButton/ClearButton';
 import EqualButton from './EqualButton/EqualButton';
 import DisplayResult from './DisplayResult/DisplayResult';
-import initialState from './State/initialState';
-import { reducer } from './State/reducer';
+import initialState from '../State/initialState';
+import { reducer } from '../State/reducer';
 import '../index.scss';
 
 const NUMBERS: string = '0123456789';

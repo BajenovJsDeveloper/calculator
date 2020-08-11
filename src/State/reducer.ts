@@ -45,6 +45,8 @@ function resultToString(
   let b: string = state.b === null ? '' : state.b;
   const act = state.action === null ? '' : state.action;
   let result = '';
+  if (state.complete) 
+    return [digit, '', result + digit];
   if (act === '') {
     a =
       (a + digit).length < 16
@@ -71,11 +73,11 @@ function checkOutofRange(
     Number(newCalcResult) < Number.MIN_SAFE_INTEGER
   ) {
     newCalcResult = Number(newCalcResult).toExponential();
-    return { res: newCalcResult, a: null, b: null, action: null };
+    return { res: newCalcResult, a: null, b: null, action: null, complete: false };
   }
   const a = newCalcResult;
   const result = act === null ? a : `${a} ${act} `;
-  return { res: result, a, b: null, action: act };
+  return { res: result, a, b: null, action: act, complete: false };
 }
 
 //-----------------------------------------------------------
@@ -90,8 +92,8 @@ function reducer(state: ResultInit, action: ActionObject) {
         const currentAction = state.action;
         newState =
           currentAction === null
-            ? { res: result, a, b: state.b, action: state.action }
-            : { res: result, a: state.a, b, action: state.action };
+            ? { res: result, a, b: state.b, action: state.action, complete: false }
+            : { res: result, a: state.a, b, action: state.action, complete: false };
       }
       break;
     }
@@ -101,9 +103,9 @@ function reducer(state: ResultInit, action: ActionObject) {
         const calc = calculate(state.a, state.b, state.action);
         newState =
           calc === RESULT_ERROR
-            ? { res: RESULT_ERROR, a: null, b: null, action: null }
+            ? { res: RESULT_ERROR, a: null, b: null, action: null, complete: false }
             : { ...checkOutofRange(null, calc) };
-        // newState = { res: calc, a: null, b: null, action: null };
+        newState.complete = true;
       }
       break;
     }
@@ -113,17 +115,18 @@ function reducer(state: ResultInit, action: ActionObject) {
       const { a } = state;
       const { b } = state;
       if (a !== null) {
+
         const act = action.data;
         if (b === null) {
           res = state.action
             ? `${res.split('').slice(0, -3).join('')} ${act} `
             : `${a} ${act} `;
-          newState = { res, a, b: null, action: act };
+          newState = { res, a, b: null, action: act, complete: false };
         } else {
           const calc = calculate(state.a, b, state.action);
           newState =
             calc === RESULT_ERROR
-              ? { res: RESULT_ERROR, a: null, b: null, action: null }
+              ? { res: RESULT_ERROR, a: null, b: null, action: null, complete: false }
               : { ...checkOutofRange(act, calc) };
         }
       }
@@ -131,7 +134,7 @@ function reducer(state: ResultInit, action: ActionObject) {
     }
     //-------------------------------------------------------
     case 'CLEAR_CLICK': {
-      newState = { res: null, a: null, b: null, action: null };
+      newState = { res: null, a: null, b: null, action: null, complete: false };
     }
   }
   //-------------------------------------------------------

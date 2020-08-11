@@ -83,6 +83,7 @@ $actionsActiveColor: rgba(128, 0, 0, 1);
       color: $resultTextColor;
       background-color: $resultBackColor;
       cursor: pointer;
+      word-break: break-all;
     }
     .digits {
       grid-column: 1/4;
